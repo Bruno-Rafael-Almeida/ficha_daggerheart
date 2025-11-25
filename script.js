@@ -720,66 +720,63 @@ class DaggerheartCharacter {
     // Modificar o bindCardEvents para usar o modal
     bindCardEvents() {
         // Race card
-        this.bindCardSlotModal('race', 0);
-        
-        // Community card
-        this.bindCardSlotModal('community', 0);
-        
-        // Class cards
-        for (let i = 0; i < 3; i++) {
-            this.bindCardSlotModal('class', i);
-        }
-        
-        // Domain cards
-        for (let i = 0; i < 5; i++) {
-            this.bindCardSlotModal('domain', i);
-        }
-        
-        // Vault cards
-        for (let i = 0; i < 5; i++) {
-            this.bindCardSlotModal('vault', i);
-        }
-        
-        // Fechar modal
-        document.querySelector('.close').addEventListener('click', () => {
+    this.bindCardSlotModal('race', 0);
+    
+    // Community card
+    this.bindCardSlotModal('community', 0);
+    
+    // Class cards
+    for (let i = 0; i < 3; i++) {
+        this.bindCardSlotModal('class', i);
+    }
+    
+    // Domain cards
+    for (let i = 0; i < 5; i++) {
+        this.bindCardSlotModal('domain', i);
+    }
+    
+    // Vault cards
+    for (let i = 0; i < 5; i++) {
+        this.bindCardSlotModal('vault', i);
+    }
+    
+    // Fechar modal
+    document.querySelector('.close').addEventListener('click', () => {
+        this.closeCardModal();
+    });
+    
+    // Fechar modal ao clicar fora
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('card-modal');
+        // Adicionar verificação para garantir que o alvo é o modal, e não um item dentro dele
+        if (e.target === modal) { 
             this.closeCardModal();
-        });
-        
-        // Fechar modal ao clicar fora
-        window.addEventListener('click', (e) => {
-            const modal = document.getElementById('card-modal');
-            if (e.target === modal) {
-                this.closeCardModal();
-            }
-        });
+        }
+    });
     }
 
     bindCardSlotModal(type, index) {
         const slots = document.querySelectorAll(`[data-type="${type}"][data-index="${index}"]`);
-        const slot = slots[0];
+    const slot = slots[0];
+    
+    if (!slot) return;
+    
+    // 1. Remove qualquer input de arquivo que ainda possa estar anexado.
+    const input = slot.querySelector('.card-input');
+    if (input) {
+        input.remove(); 
+    }
+    
+    // 2. Anexa o evento de clique ao slot principal.
+    // O evento de clique precisa ser anexado ao elemento de slot ou container, 
+    // e não apenas ao placeholder, para funcionar quando a carta já estiver lá.
+    slot.addEventListener('click', (e) => {
+        // Ignora cliques em botões de contador (se existirem)
+        if (e.target.closest('.card-counter')) return; 
         
-        if (!slot) return;
-        
-        const placeholder = slot.querySelector('.card-placeholder');
-        
-        if (placeholder) {
-            // Remover input de arquivo existente
-            const existingInput = placeholder.querySelector('.card-input');
-            if (existingInput) {
-                existingInput.remove();
-            }
-            
-            placeholder.addEventListener('click', () => {
-                this.openCardSelectionModal(type, index);
-            });
-            
-            // Permitir clicar na imagem para trocar
-            slot.addEventListener('click', (e) => {
-                if (e.target.classList.contains('card-image')) {
-                    this.openCardSelectionModal(type, index);
-                }
-            });
-        }
+        // Abre o modal
+        this.openCardSelectionModal(type, index);
+    });
     }
     //codigo
 
@@ -1178,7 +1175,7 @@ class DaggerheartCharacter {
             this.bindCardSlot('vault', i);
         }
     }
-    
+    /*
     bindCardSlot(type, index) {
         const slots = document.querySelectorAll(`[data-type="${type}"][data-index="${index}"]`);
         const slot = slots[0];
@@ -1207,7 +1204,7 @@ class DaggerheartCharacter {
                 input.click();
             });
         }
-    }
+    }*/
     
     bindDragAndDropEvents() {
         const containers = document.querySelectorAll('.card-slot-container[draggable="true"]');
